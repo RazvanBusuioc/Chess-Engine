@@ -1,0 +1,125 @@
+PA 2020 - Faculty of Automatic Control and Computers
+324CB
+Students:
+- Dragus Alexandru
+		- interface with Xboard
+- Busuioc Razvan Gabriel 
+		- OOP classes, game table structure, pieces movements
+		- Minimax algorithm
+- Dinu Daniel
+		- pieces allowed movements (ranges)
+
+[For 2nd Stage]
+Our engine plays with Fairy Max and the average success rate is 2 wins out of 10 matches
+
+
+Context
+
+One semester-long project which involves coding a chess engine 
+interfaced with Xboard
+
+
+Compile and run instructions
+
+The Makefile has the 'make build' rule for creating the executable file and 
+the 'make run' rule for running.
+
+The executable in named 'engineEtapa1' for the first term
+
+For running with Xboard, use:
+./PATH/TO/XBOARD -fcp "./PATH/TO/EXECUTABLE"
+
+
+Project structure
+
+The project uses OOP concepts in C++ language. 
+
+
+Classes
+
+--Class Piece--
+The "Piece" class represents a general piece in the game and is extended by
+the following classes:
+-Pawn
+-Rook
+-Knight
+-Bishop
+-Queen
+-King
+-NoPiece(represents an empty space)
+
+All these classes represent the particular pieces in the game of chess.
+
+All the pieces have a reference to a CartesianPosition("CartPoint") class 
+that help them store their position on the table. Also, every piece has
+a vector of cartesian positions that represents their range on the table(
+the possible and valid moves that a piece can make at a specified time).
+
+The pieces have also a reference to the table so they can make decisions
+based on the current state of the table. In addition, the Piece class has
+a name, color and an alive status(1 if on the board, 0 if off the board)
+
+We have chosen to implement the functionalities of the Pawn class for the 
+first term. The setRange method in this class verifies all 4 moves that a pawn can make (including the En Passante) and stores them in the range 
+vector.
+
+--Class CartPosition--
+The "CartPosition" Class represents a cartesian position on the board. 
+The methods in this class can return a position in the Matrix-format(10, 02)
+but also in the Table-format(a2,b3, etc).
+
+--Class Table--
+The "Table" Class represents the chess board. This class has an 8x8 Matrix
+that represents the "battle field". The Table Class holds a reference to
+every Piece on the board. This class holds all the methods that decide
+how a move should be made based on Piece`s range vectors. In addition, this 
+class has the methods that move pieces on the board and updates the state 
+of the board. The Table Class also holds the implementations for the MiniMax
+algorithm
+
+--Class Game--
+The "Game" Class contains the interface with Xboard and interprets everything
+that goes in and out of the engine. It has listeners and writers to Xboard 
+and it also initializes the game. The loop which always listens and responds
+with moves and commands is in startGame() method.
+The next update is set to divide the listen-decision-making part from the 
+actual startGame method.
+[2nd stage]
+Game class now only contains the "main" loop where command are read and moves
+are decided. The interface with Xboard is now in the XboardInterface Class
+
+--Class MoveTransition--
+This class represents a move and contains the initial and final locations of
+the move and the piece(s) that are involved in the move
+
+--Class Player--
+This class represents a Player (it has as its descendents the BlackPlayer and
+the WhitePlayer). Every Player has a list of pieces, and a list of possible
+moves.
+
+--Class BoardEvaluator--
+The main purpose of this class is evaluating a certain board given as
+parameter. The evaluation consists in asigning every piece a score and summing
+the scores for each player obtaining the scores for white and black players.
+These scores are then substracted from one another thus obtaining the final
+score that is being returned by the "evaluate" method. This class is used for
+the MiniMax algorithm.
+
+--Class XboardInterface--
+[Added in 2nd stage]
+Class to interface Xboard. Changed from write and read to cin and cout because
+of multiple problems when playing Two Machines mode. 
+
+
+Algorithmic approach
+
+We used MiniMax algorithm with alpha-beta pruning for picking the next move of
+the engine
+Time complexity : O(A1 * A2 * .. An) where:
+-n is the depth of the search
+-Aj is the number of possible moves at j`th level in the search tree
+
+
+Sources:
+Interfacing with Xboard
+https://www.gnu.org/software/xboard/engine-intf.html
